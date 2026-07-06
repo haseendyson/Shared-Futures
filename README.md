@@ -23,6 +23,8 @@ Open http://localhost:3000.
 
 The repository includes a GitHub Actions workflow in [.github/workflows/ci.yml](.github/workflows/ci.yml) that runs `npm ci` and `npm run build` on pushes and pull requests.
 
+By default, the app now opens the MicrON healthcare-futures study. You can override it with the `DEFAULT_STUDY` environment variable if needed.
+
 ## Notes
 
 - The app uses OpenAI for conversation, summarisation, scenario generation, and adaptation.
