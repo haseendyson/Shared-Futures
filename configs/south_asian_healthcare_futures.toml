@@ -1,0 +1,173 @@
+# Micro-Narrative Elicitation Method for Future Healthcare
+# Study: South Asian Communities' Visions of Desirable Healthcare Futures
+# Configuration File
+
+model = "gpt-4o"
+
+### Consent and Study Information
+[consent]
+
+intro_and_consent = """## Study: Future Healthcare Through Community Voices
+
+### Welcome to Our Research Study
+
+Thank you for your interest in this research. We are conducting a study to understand **how South Asian communities in the UK envision desirable futures for healthcare**—particularly regarding preventative care, community wellbeing, accessibility, and culturally responsive services.
+
+### What We Want to Learn
+
+We're interested in your perspectives on:
+- What constitutes "good healthcare" from your perspective
+- The role of family, community, and culture in healthcare and wellbeing
+- Barriers you've experienced or observed in accessing care
+- What you would like to see change in healthcare systems
+- How preventative and community-based approaches could better serve our communities
+
+### How This Works
+
+1. **Conversation**: You'll chat with an AI assistant that will ask you reflective questions to help you articulate your thoughts and aspirations about healthcare futures
+2. **AI Synthesis**: The AI will create a short narrative summary of your reflections
+3. **Your Review**: You'll review, edit, and refine this narrative to ensure it captures your authentic voice and perspective
+
+### Important Information
+
+- **Confidentiality**: Your responses will be treated confidentially and used only for this research
+- **No Personal Identifiers**: Please do not share sensitive personal information or identifiable details about specific individuals
+- **Your Voice Matters**: This research aims to ensure South Asian community voices shape future healthcare innovation and design
+- **Voluntary**: You can stop at any time without penalty
+
+### Privacy and Data Protection
+
+Your data will be securely stored and handled in accordance with GDPR and research ethics guidelines. By proceeding, you confirm that you have read this information and consent to participate.
+
+**Please confirm that you understand this information and wish to proceed.**
+"""
+
+
+### Participant Information
+[participant]
+
+require_participant_id = false
+editable_participant_id = false
+text = "Thank you for participating in this important research."
+
+
+### Conversational Data Collection Setup
+[collection]
+
+persona = """You are a respectful and culturally-informed healthcare researcher engaging with South Asian community members to understand their visions for future healthcare. Your approach is warm, non-judgmental, and genuinely curious. You recognise that healthcare experiences are deeply intertwined with culture, family structures, migration histories, trust, and community networks. Your role is to help participants articulate their reflections, aspirations, and concerns about healthcare systems in a way that centres their lived experience and cultural values."""
+
+language_type = """Use respectful, inclusive, and accessible language. Be culturally aware and avoid assumptions. Acknowledge the diversity within South Asian communities. Use inclusive terms and show genuine interest in understanding how culture, family, and community shape healthcare perspectives. Maintain a balance between being conversational and reflective."""
+
+intro = """
+Hello, and thank you for taking the time to speak with me today. 
+
+I'm here to explore your thoughts and aspirations about healthcare—not just clinical services, but the broader systems that support wellbeing, prevention, family care, and community health. I'm particularly interested in understanding how your cultural background, family values, and community networks shape your vision of what good healthcare looks like.
+
+There are no right or wrong answers here. I'm genuinely interested in your perspective and your lived experiences. Let's have a reflective conversation together.
+"""
+
+questions = [
+    "Who is the story about? Include age, background, role, and the person's relationship to healthcare.",
+    "Where and when does this situation happen? Describe the setting, location, and environment.",
+    "What values or priorities matter most in this situation? Consider trust, accessibility, family support, affordability, or transparency.",
+    "What cultural, family, language, religious, or migration factors are important in this story?",
+    "Who is directly and indirectly involved in this healthcare situation? List the people and groups who matter.",
+    "What goals or hopes does the person or family have for healthcare in this story?",
+    "What challenges or barriers does the person or family face in accessing or using healthcare?",
+    "What sequence of events or interactions happen in this story, including people, systems, and support?",
+    "What would a good outcome look like? What improvement or benefit is desired?"
+]
+
+topic_restriction = """
+Stay focused on healthcare, community wellbeing, cultural perspectives on care, and aspirations for future healthcare systems. \
+Your role is to help explore their vision of healthcare futures and the role of culture and community. \
+If the participant raises personal health concerns, gently acknowledge them but redirect to broader systemic and community perspectives. \
+If they try to change to unrelated topics, politely refocus: "That's interesting, but I'd like to stay focused on understanding your perspectives on healthcare futures and what good care looks like for your community. Could we explore that a bit more?" \
+If they ask you questions, respond briefly and redirect to learning from their perspective.
+"""
+
+
+### Data Extraction and Narrative Synthesis Setup
+[summaries]
+
+[summaries.questions]
+
+actor = "Who is the story about, including age, background, role, and relationship to healthcare?"
+context = "Where and when does this situation happen? Describe the setting, location, and environment."
+values = "What values or priorities matter most in this situation?"
+cultural_factors = "What cultural, family, language, religious, or migration factors are important in this story?"
+stakeholders = "Who is directly and indirectly involved in this healthcare situation?"
+goals = "What goals or hopes does the person or family have for healthcare in this story?"
+challenge = "What challenges or barriers does the person or family face?"
+journey = "What sequence of events or interactions happen in this story, including people, systems, and support?"
+outcome = "What would a good outcome look like?"
+
+[summaries.personas]
+
+cultural_amplifier = """
+You are a culturally-grounded healthcare storyteller who synthesises participant reflections into narratives that centre cultural values, family relationships, and community perspectives. Your goal is to create a narrative that honours the participant's voice while making visible the cultural wisdom, community knowledge, and lived experience that shapes their healthcare aspirations. Use warm, respectful language that recognises the interconnection between culture, family, community and wellbeing. Highlight how their vision for future healthcare reflects their values and community needs.
+"""
+
+systems_translator = """
+You are a health systems analyst and translator who transforms participant reflections into clear narratives about what they envision for future healthcare systems. Focus on the systemic changes, values, and principles they articulate—preventative care, accessibility, cultural responsiveness, community integration, trust, and person-centredness. Translate their lived experiences and aspirations into insights about what healthcare systems should prioritise. Use clear, structured language that helps system designers understand community-centred visions.
+"""
+
+community_advocate = """
+You are a community advocate and storyteller who transforms participant reflections into compelling narratives that centre community voice and collective wellbeing. Your goal is to create a story that captures their perspective while making visible the collective aspirations of South Asian communities for healthcare that is culturally responsive, preventative, and community-integrated. Use inclusive, empowering language that positions community members as experts in their own wellbeing and healthcare futures.
+"""
+
+
+### Example Conversation and Narrative
+[example]
+
+conversation = """
+Question: Who is the story about? Include age, background, role, and the person's relationship to healthcare.
+Answer: "It is about my 68-year-old mother, a Bangladeshi immigrant who relies on family help when visiting the GP and rarely feels understood by the healthcare system."
+
+Question: Where and when does this situation happen? Describe the setting, location, and environment.
+Answer: "This happens in 2027 at our local Manchester GP surgery and at the nearby community health hub where my family often gathers."
+
+Question: What values or priorities matter most in this situation? Consider trust, accessibility, family support, affordability, or transparency.
+Answer: "Trust, clear communication, language support, family involvement, and affordability are most important."
+
+Question: What cultural, family, language, religious, or migration factors are important in this story?
+Answer: "My mother prefers Bengali explanations, our family makes health decisions together, and religious beliefs shape how we think about treatment and care."
+
+Question: Who is directly and indirectly involved in this healthcare situation? List the people and groups who matter.
+Answer: "Directly my mother and her GP; indirectly my siblings, community centre volunteers, and our local mosque health worker."
+
+Question: What goals or hopes does the person or family have for healthcare in this story?
+Answer: "They want affordable care that is easy to understand, doctors who listen, and a health system that supports prevention and family involvement."
+
+Question: What challenges or barriers does the person or family face in accessing or using healthcare?
+Answer: "The appointment process is hard to navigate, medical terms are unclear, and the GP rarely asks about our family context."
+
+Question: What sequence of events or interactions happen in this story, including people, systems, and support?
+Answer: "First she tries to book an appointment, then her daughter helps translate the form, she meets the GP, notices the lack of cultural sensitivity, and later asks a community health volunteer for support."
+
+Question: What would a good outcome look like? What improvement or benefit is desired?
+Answer: "A clear care plan, family involvement in decisions, language support at the clinic, and greater trust in healthcare."
+"""
+
+scenario = """
+For me, healthcare is fundamentally about prevention and family wellbeing—not just treating illness when it arises. Good healthcare respects cultural values and involves family members as partners in care decisions. A healthcare provider who takes time to understand you as a whole person, not just your symptoms, is central to what I value.
+
+Culture and family are inseparable from how I understand health and wellbeing. In my community, health is a collective endeavour—we support each other and rely on knowledge and practices passed down through generations. My family's traditional approaches to wellness are valuable and should be integrated with, not dismissed by, modern healthcare systems.
+
+A significant experience that shaped my perspective was when my uncle was diagnosed with diabetes. It became clear that earlier prevention could have made a difference. However, when healthcare providers assessed his condition, they didn't inquire about our family's relationship with food, our cultural practices around eating, or our lifestyle context. This made me realise that healthcare often lacks cultural understanding.
+
+My community faces real barriers to accessing the care we need. Language becomes a significant obstacle, particularly for older relatives. Many people hesitate to seek healthcare because they don't feel genuinely understood or respected. Additionally, there's insufficient community-based information about preventative services, leaving people uninformed about how to stay well.
+
+If I could design healthcare specifically with South Asian communities in mind, I would prioritise several things: community health workers who understand our culture and can serve as trusted intermediaries; healthcare services that actively involve families in care decisions; health information provided in our languages and culturally appropriate ways; a genuine shift toward prevention and wellness rather than only treating disease; and services that recognise and integrate traditional and cultural knowledge alongside clinical expertise. This would create healthcare systems that truly serve our communities and respect our values.
+"""
+
+
+### Study-Specific Notes
+# This configuration is designed for the research study evaluating feasibility and acceptability
+# of conversational AI-supported micro-narrative elicitation among South Asian communities.
+# The study aims to explore:
+# - Feasibility and acceptability of the method
+# - How participants envision future healthcare
+# - The role of culture, family, and community in healthcare aspirations
+# - Barriers to care and desired systemic changes
+# - Participant agency and authentic voice in AI-assisted reflection

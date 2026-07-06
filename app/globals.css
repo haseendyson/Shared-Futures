@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  /* Paper & ink */
+  --color-paper: #eff1ec;
+  --color-paper-raised: #f8f9f6;
+  --color-ink: #1f2a24;
+  --color-ink-muted: #4b5a52;
+  --color-ink-faint: #8b9a91;
+
+  /* Accents */
+  --color-teal: #2d6a63;
+  --color-teal-deep: #1e4b45;
+  --color-amber: #c98a3e;
+  --color-sage: #7fa98f;
+  --color-error: #b3492f;
+
+  /* Type */
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-public-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), "SFMono-Regular", monospace;
+}
+
+html,
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-paper);
+}
+
+/* Subtle paper grain so the "page" doesn't feel flat/digital */
+.paper-texture {
+  background-image: radial-gradient(var(--color-ink-faint) 0.5px, transparent 0.5px);
+  background-size: 18px 18px;
+  opacity: 0.06;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
