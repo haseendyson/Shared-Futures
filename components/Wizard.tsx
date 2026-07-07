@@ -11,9 +11,12 @@ import { ReviewStep } from "@/components/ReviewStep";
 import { RateStep } from "@/components/RateStep";
 import { AdaptStep } from "@/components/AdaptStep";
 import { CompletionStep } from "@/components/CompletionStep";
+import { EchoIntro } from "@/components/EchoIntro";
+import { GeneratedScenariosPreview } from "@/components/GeneratedScenariosPreview";
 import { ChatMessage } from "@/lib/chatTypes";
 
 type AgentState =
+  | "intro"
   | "consent"
   | "identify"
   | "collect"
@@ -23,7 +26,8 @@ type AgentState =
   | "adapt"
   | "save";
 
-const THREAD_STEPS: ThreadStep[] = [
+// Full workflow thread steps
+const THREAD_STEPS_FULL: ThreadStep[] = [
   { key: "consent", label: "Consent" },
   { key: "identify", label: "Identify" },
   { key: "collect", label: "Your story" },
@@ -31,8 +35,18 @@ const THREAD_STEPS: ThreadStep[] = [
   { key: "save", label: "Complete" },
 ];
 
-// review/rate/adapt all live under the "shape" node in the thread display
-const THREAD_INDEX: Record<AgentState, number> = {
+// Simplified workflow thread steps
+const THREAD_STEPS_SIMPLIFIED: ThreadStep[] = [
+  { key: "consent", label: "Consent" },
+  { key: "identify", label: "Identify" },
+  { key: "collect", label: "Your story" },
+  { key: "generate", label: "Generate" },
+  { key: "save", label: "Complete" },
+];
+
+// review/rate/adapt all live under the "shape" node in the thread display (full mode)
+const THREAD_INDEX_FULL: Record<AgentState, number> = {
+  intro: -1, // Not part of the thread
   consent: 0,
   identify: 1,
   collect: 2,
@@ -43,9 +57,30 @@ const THREAD_INDEX: Record<AgentState, number> = {
   save: 4,
 };
 
-export function Wizard({ config }: { config: PublicStudyConfig }) {
+// Simplified mode thread index
+const THREAD_INDEX_SIMPLIFIED: Record<AgentState, number> = {
+  intro: -1,
+  consent: 0,
+  identify: 1,
+  collect: 2,
+  generate: 3,
+  review: 4, // Not used in simplified
+  rate: 4,   // Not used in simplified
+  adapt: 4,  // Not used in simplified
+  save: 4,
+};
+
+export function Wizard({
+  config,
+  workflowMode = "full",
+  enableEchoIntro = true,
+}: {
+  config: PublicStudyConfig;
+  workflowMode?: "full" | "simplified";
+  enableEchoIntro?: boolean;
+}) {
   const [sessionId] = useState(() => crypto.randomUUID());
-  const [agentState, setAgentState] = useState<AgentState>("consent");
+  const [agentState, setAgentState] = useState<AgentState>(enableEchoIntro ? "intro" : "consent");
   const [participantId, setParticipantId] = useState<string | null>(null);
   const [previousScenario, setPreviousScenario] = useState<string | null>(null);
   const [conversationMessages, setConversationMessages] = useState<ChatMessage[]>([]);
@@ -63,6 +98,11 @@ export function Wizard({ config }: { config: PublicStudyConfig }) {
       setParticipantId((id) => id ?? crypto.randomUUID());
       setAgentState("collect");
     }
+  }
+
+  function handleIntroComplete(phase: "pre-visit" | "on-visit" | "post-visit") {
+    // Store the selected phase if needed, then move to consent
+    setAgentState("consent");
   }
 
   function handleParticipantConfirmed(id: string, prevScenario: string | null) {
@@ -84,11 +124,22 @@ export function Wizard({ config }: { config: PublicStudyConfig }) {
     setGeneratedScenarios(scenarios);
     setSummaryAnswers(summary);
     setLanguageLevel(level);
-    if (scenarios.length === 1) {
+    
+    if (workflowMode === "simplified") {
+      // In simplified mode, auto-select first scenario and go to save
       setSelectedIndex(0);
-      setAgentState("rate");
+      const text = scenarios[0] || "";
+      setFinalScenario(text);
+      setInitialReviewScore(5); // Default mid-range rating
+      setAgentState("save");
     } else {
-      setAgentState("review");
+      // Full workflow: go to review or rate
+      if (scenarios.length === 1) {
+        setSelectedIndex(0);
+        setAgentState("rate");
+      } else {
+        setAgentState("review");
+      }
     }
   }
 
@@ -111,6 +162,16 @@ export function Wizard({ config }: { config: PublicStudyConfig }) {
 
   const originalScenarioText = selectedIndex !== null ? generatedScenarios[selectedIndex] : "";
 
+  // Render intro screen if enabled
+  if (enableEchoIntro && agentState === "intro") {
+    return (
+      <EchoIntro
+        eventName={config.studyName.replace(/_/g, " ")}
+        onPhaseSelected={handleIntroComplete}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b" style={{ borderColor: "var(--color-ink-faint)" }}>
@@ -131,7 +192,10 @@ export function Wizard({ config }: { config: PublicStudyConfig }) {
       </header>
 
       <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-12 flex gap-12">
-        <StoryThread steps={THREAD_STEPS} currentIndex={THREAD_INDEX[agentState]} />
+        <StoryThread
+          steps={workflowMode === "full" ? THREAD_STEPS_FULL : THREAD_STEPS_SIMPLIFIED}
+          currentIndex={workflowMode === "full" ? THREAD_INDEX_FULL[agentState] : THREAD_INDEX_SIMPLIFIED[agentState]}
+        />
 
         <div className="flex-1 min-w-0 relative">
           <div
@@ -175,15 +239,23 @@ export function Wizard({ config }: { config: PublicStudyConfig }) {
               />
             )}
 
-            {agentState === "review" && (
+            {workflowMode === "simplified" && agentState === "save" && generatedScenarios.length > 0 && (
+              <GeneratedScenariosPreview
+                participantId={participantId}
+                scenarios={generatedScenarios}
+                summaryAnswers={summaryAnswers}
+              />
+            )}
+
+            {workflowMode === "full" && agentState === "review" && (
               <ReviewStep scenarios={generatedScenarios} onSelect={handleSelectScenario} />
             )}
 
-            {agentState === "rate" && (
+            {workflowMode === "full" && agentState === "rate" && (
               <RateStep scenarioText={originalScenarioText} onContinue={handleRated} />
             )}
 
-            {agentState === "adapt" && (
+            {workflowMode === "full" && agentState === "adapt" && (
               <AdaptStep
                 study={config.studyName}
                 languageLevel={languageLevel}

@@ -1,4 +1,4 @@
-# MicrON Next App
+# Shared Futures
 
 This project is a Next.js study app for collecting participant stories and generating scenario options.
 

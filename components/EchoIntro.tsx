@@ -6,12 +6,14 @@ type Phase = "pre-visit" | "on-visit" | "post-visit";
 
 export interface EchoIntroProps {
   eventName?: string;
+  tagline?: string;
   onPhaseSelected?: (phase: Phase) => void;
   onAbout?: () => void;
 }
 
 export function EchoIntro({
   eventName = "Great Exhibition Road Festival",
+  tagline = "Event Conversations. Heard. Ongoing.",
   onPhaseSelected,
   onAbout,
 }: EchoIntroProps) {

@@ -20,8 +20,8 @@ const plexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MicrON · Micro-Narrative Elicitation",
-  description: "A guided conversation to help shape your future healthcare story.",
+  title: "Shared Futures",
+  description: "A guided conversation experience for shared futures and community stories.",
 };
 
 export default function RootLayout({

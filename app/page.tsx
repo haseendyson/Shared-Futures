@@ -18,6 +18,10 @@ export default async function Home({
 
   const prompts = loadStudyPrompts(studyName);
   const publicConfig = toPublicConfig(studyName, prompts);
+  
+  // Determine workflow mode from environment
+  const workflowMode = (process.env.WORKFLOW_MODE ?? "full") as "full" | "simplified";
+  const enableEchoIntro = process.env.ENABLE_ECHO_INTRO !== "false";
 
-  return <Wizard config={publicConfig} />;
+  return <Wizard config={publicConfig} workflowMode={workflowMode} enableEchoIntro={enableEchoIntro} />;
 }
